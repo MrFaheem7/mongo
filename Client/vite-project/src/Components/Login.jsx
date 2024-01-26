@@ -12,9 +12,9 @@ const Login = () => {
     e.preventDefault();
     try{ const response=await axios.post('http://localhost:3000/login',{email,password})
   console.log(response,'response')
-if(response.status==200){
+if(response.data.message=='Login Successfully'){
   navigate('/home')
-  // toast.success(response.data)
+  toast.success(response.data)
 }
 else{
   toast.error(response.data)

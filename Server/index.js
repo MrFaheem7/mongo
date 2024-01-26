@@ -5,12 +5,14 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const User = require("./models/Usermodel");
+const Sales = require("./models/salesModel");
 const { algorithm, secretKey } = require("./config");
+const verifyToken = require("./middleware");
 const app = express();
 const port = 3000;
 const url =
-  "mongodb+srv://mrfaheemuddin7:e8kJcHDJ5t3Vdeps@testprodb.4tv7i0g.mongodb.net/?retryWrites=true&w=majority";
-const db = "TestProDb";
+  "mongodb+srv://mrfaheemuddin7:e8kJcHDJ5t3Vdeps@testprodb.4tv7i0g.mongodb.net/sample_supplies?retryWrites=true&w=majority";
+
 app.use(express.json());
 app.use(cors());
 mongoose
@@ -24,30 +26,44 @@ mongoose
   .catch((err) => {
     console.error("Error connecting to MongoDB Atlas", err);
   });
-// const insert=async()=>{
-//    await User.create({
-//     name:'faheemuddin',
-//     email:'lvlhaapkabro@gmail.com',
-//     password:'12213113314'
-//    })
-//    return insert
-// }
-// app.get('/', (req, res) => {
-//   res.send('Hello, World!');
-// });
-const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
-  if (!token) {
-    return res.status(403).json({ error: "Unauthorized" });
+// const insert = async () => {
+//   await Sales.collection({
+//     storeLocation: "dnmdvnmvn",
+//   });
+//   return insert;
+// };
+app.post("/insertSalesData", async (req, res) => {
+  try {
+    // Assuming you have a request body with the data to be inserted
+    const { storeLocation, amount, product } = req.body;
+
+    // Create a new Sales document
+    const newSale = new Sales({
+      storeLocation: "mnmnmnmn",
+      amount,
+      product,
+    });
+
+    // Save the document to the "sales" collection
+    const savedSale = await newSale.save();
+
+    res
+      .status(201)
+      .json({ savedSale, message: "Sale data inserted successfully" });
+  } catch (error) {
+    console.error("Error inserting sales data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-  jwt.verify(token, secretKey, (err, decoded) => {
-    if (err) {
-      return res.status(401).json({ error: "Invalid TOken" });
-    }
-    req.userId = decoded.userId;
-    next();
-  });
-};
+});
+app.get("/getAllSalesData", verifyToken, async (req, res) => {
+  try {
+    const allSalesData = await Sales.find();
+    res.status(200).json({ allSalesData });
+  } catch (error) {
+    console.error("Error getting sales data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 app.post("/delete", verifyToken, async (req, res) => {
   await User.deleteMany({});
 });
@@ -59,12 +75,15 @@ app.post("/", async (req, res) => {
     const newUser = new User({ name, email, password });
     const savedUser = await newUser.save();
 
-    res.status(201).json(savedUser);
+    res
+      .status(201)
+      .json({ savedUser, message: "User Registered successfully" });
   } catch (error) {
     console.error("Error handling POST request:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 app.post("/login", async (req, res) => {
   console.log(req, "reqqq");
   try {
@@ -76,7 +95,7 @@ app.post("/login", async (req, res) => {
             algorithm: algorithm,
             expiresIn: "10m",
           });
-          res.json({ token });
+          res.status(200).json({ token, message: "Login Successfully" });
         } else {
           res.json("Password is Incorrect");
         }
