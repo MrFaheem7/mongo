@@ -5,6 +5,8 @@ import Login from "./Components/Login"
 import Home from "./Components/Home"
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Data from "./Components/Data"
+import PrivateRoutes from "./Components/PrivateRoutes"
 const  App=()=> {
 
   return (
@@ -26,8 +28,10 @@ const  App=()=> {
 <Routes>
   <Route path="/" element={<SignUp/>}/>
   <Route path="/login" element={<Login/>}/>
+  <Route  element={<PrivateRoutes/>}>
   <Route path="/home" element={<Home/>}/>
-
+  <Route path="/data" element={<Data/>}/>
+  </Route>
 </Routes>
 </BrowserRouter>
     </>

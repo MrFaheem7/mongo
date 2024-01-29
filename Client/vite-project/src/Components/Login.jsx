@@ -1,7 +1,7 @@
 import { Axios } from "axios";
 import { useState } from "react";
 import axios from 'axios'
-import { useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Login = () => {
@@ -13,6 +13,7 @@ const Login = () => {
     try{ const response=await axios.post('http://localhost:3000/login',{email,password})
   console.log(response,'response')
 if(response.data.message=='Login Successfully'){
+  localStorage.setItem('token',true)
   navigate('/home')
   toast.success(response.data)
 }
@@ -34,7 +35,7 @@ else{
       }}
     >
        <div style={{
-      backgroundColor: "rgb(94 119 117 / 79%)", 
+      backgroundColor: "rgb(94 119 117 / 54%)", 
       borderRadius: "10px",
    
       boxShadow: "rgb(75 77 245 / 50%) 10px 10px 20px",
@@ -81,6 +82,8 @@ else{
         <button type="submit" className="btn btn-primary">
           Login
         </button>
+        <p>
+        <Link  to='/'>Not an account? Register!!!</Link></p>
       </form>
       </div>
     </div>

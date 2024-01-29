@@ -26,35 +26,30 @@ mongoose
   .catch((err) => {
     console.error("Error connecting to MongoDB Atlas", err);
   });
-// const insert = async () => {
-//   await Sales.collection({
-//     storeLocation: "dnmdvnmvn",
-//   });
-//   return insert;
-// };
-app.post("/insertSalesData", async (req, res) => {
-  try {
-    // Assuming you have a request body with the data to be inserted
-    const { storeLocation, amount, product } = req.body;
 
-    // Create a new Sales document
-    const newSale = new Sales({
-      storeLocation: "mnmnmnmn",
-      amount,
-      product,
-    });
+// app.post("/insertSalesData", async (req, res) => {
+//   try {
+//     // Assuming you have a request body with the data to be inserted
+//     const { storeLocation, amount, product } = req.body;
 
-    // Save the document to the "sales" collection
-    const savedSale = await newSale.save();
+//     // Create a new Sales document
+//     const newSale = new Sales({
+//       storeLocation: "mnmnmnmn",
+//       amount,
+//       product,
+//     });
 
-    res
-      .status(201)
-      .json({ savedSale, message: "Sale data inserted successfully" });
-  } catch (error) {
-    console.error("Error inserting sales data:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+//     // Save the document to the "sales" collection
+//     const savedSale = await newSale.save();
+
+//     res
+//       .status(201)
+//       .json({ savedSale, message: "Sale data inserted successfully" });
+//   } catch (error) {
+//     console.error("Error inserting sales data:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 app.get("/getAllSalesData", verifyToken, async (req, res) => {
   try {
     const allSalesData = await Sales.find();
