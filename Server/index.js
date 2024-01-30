@@ -8,6 +8,7 @@ const User = require("./models/Usermodel");
 const Sales = require("./models/salesModel");
 const { algorithm, secretKey } = require("./config");
 const verifyToken = require("./middleware");
+const EmployeeData = require("./models/EmployeeData");
 const app = express();
 const port = 3000;
 const url =
@@ -16,10 +17,7 @@ const url =
 app.use(express.json());
 app.use(cors());
 mongoose
-  .connect(url, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(url)
   .then(() => {
     console.log("Connected to MongoDB Atlas");
   })
@@ -104,6 +102,57 @@ app.post("/login", async (req, res) => {
   }
 });
 
+//CRUD OPERATIONS
+app.get("/api", async (req, res) => {
+  res.status(200).json({ respone: "api worked....!" });
+});
+app.get("/api/data", async (req, res) => {
+  try {
+    const response = await EmployeeData.find();
+    res.status(200).json({ response });
+  } catch (error) {
+    console.error("Error handling GET request:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+app.post("/api/data", async (req, res) => {
+  try {
+    const { name, position } = req.body;
+    const newEmployeeData = new EmployeeData({
+      name: name,
+      position: position,
+    });
+    const response = await newEmployeeData.save();
+    res
+      .status(200)
+      .json({ response, message: "Employee Successfully  Inserted" });
+  } catch (error) {
+    console.error("Error handling POST request:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+app.put("/api/data/:id", async (req, res) => {
+  try {
+    const updateEmployee = await EmployeeData.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({ updateEmployee, message: "Employee Updatedd" });
+  } catch (error) {
+    res.status(500).json({ error: "Error handling Update request:" });
+  }
+});
+app.delete("/api/data/:id", async (req, res) => {
+  try {
+    const deleteEmployee = await EmployeeData.findByIdAndDelete(req.params.id);
+    res.status(200).json({ deleteEmployee, message: "Employee Deletedd" });
+  } catch (error) {
+    res.status(500).json({ error: "Error handling Delete request:" });
+  }
+});
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -10,11 +10,15 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
- 
+
     try {
-      const response = await axios.post('http://localhost:3000/', { name, email, password });
+      const response = await axios.post("http://localhost:3000/", {
+        name,
+        email,
+        password,
+      });
       console.log(response);
-      navigate('/login');
+      navigate("/login");
     } catch (error) {
       console.error(error);
     }
@@ -26,20 +30,23 @@ const SignUp = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh"
+        height: "100vh",
       }}
     >
-      <div style={{
-        backgroundColor: 'transparent',
-        borderRadius: "10px",
-        boxShadow: "rgb(75 77 245 / 50%) 10px 10px 20px",
-        border: "rgb(75 77 245 / 50%) solid 1.5px",
-        padding: "15px"
-      }}>
+      <div
+        style={{
+          backgroundColor: "transparent",
+          borderRadius: "10px",
+          boxShadow: "rgb(75 77 245 / 50%) 10px 10px 20px",
+          border: "rgb(75 77 245 / 50%) solid 1.5px",
+          padding: "15px",
+        }}
+      >
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="exampleInputName1">Name</label>
-            <input required
+            <input
+              required
               onChange={(e) => setName(e.target.value)}
               type="text"
               className="form-control"
@@ -49,7 +56,8 @@ const SignUp = () => {
           </div>
           <div className="form-group">
             <label htmlFor="exampleInputEmail1">Email address</label>
-            <input required
+            <input
+              required
               type="email"
               onChange={(e) => setEmail(e.target.value)}
               className="form-control"
@@ -63,7 +71,8 @@ const SignUp = () => {
           </div>
           <div className="form-group">
             <label htmlFor="exampleInputPassword1">Password</label>
-            <input required
+            <input
+              required
               onChange={(e) => setPassword(e.target.value)}
               type="password"
               className="form-control"
@@ -81,6 +90,9 @@ const SignUp = () => {
               Check me out
             </label>
           </div>
+          <p>
+            <Link to="/login">Already have an account? Login!</Link>
+          </p>
           <button type="submit" className="btn btn-primary">
             SignUp
           </button>
