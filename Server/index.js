@@ -140,7 +140,7 @@ app.put("/api/data/:id", async (req, res) => {
         new: true,
       }
     );
-    res.status(200).json({ updateEmployee, message: "Employee Updatedd" });
+    res.status(200).json({ updateEmployee, message: "Employee Updated" });
   } catch (error) {
     res.status(500).json({ error: "Error handling Update request:" });
   }
@@ -148,7 +148,7 @@ app.put("/api/data/:id", async (req, res) => {
 app.delete("/api/data/:id", async (req, res) => {
   try {
     const deleteEmployee = await EmployeeData.findByIdAndDelete(req.params.id);
-    res.status(200).json({ deleteEmployee, message: "Employee Deletedd" });
+    res.status(200).json({ deleteEmployee, message: "Employee Deleted" });
   } catch (error) {
     res.status(500).json({ error: "Error handling Delete request:" });
   }

@@ -3,31 +3,17 @@ import { useState } from "react";
 import axios from "axios";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { UserAction } from "../redux/action/User";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:3000/login", {
-        email,
-        password,
-      });
-      console.log(response, "response");
-      if (response.data.message == "Login Successfully") {
-        localStorage.setItem("token", true);
-        navigate("/home");
-        toast.success(response.data.message);
-      } else {
-        toast.error(response.data);
-      }
-    } catch {
-      (error) => {
-        console.log(error, "error");
-      };
-    }
+    dispatch(UserAction({ email, password, navigate }));
   };
   return (
     <div
