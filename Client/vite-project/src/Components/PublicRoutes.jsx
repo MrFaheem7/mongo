@@ -2,9 +2,9 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 
-const PrivateRoutes = () => {
+const PublicRoutes = () => {
   const { user } = useSelector((state) => state.root.user);
-  return user ? <Outlet /> : <Navigate to="/login" replace />;
+  return user ? <Navigate to="/home" replace /> : <Outlet />;
 };
 
-export default PrivateRoutes;
+export default PublicRoutes;

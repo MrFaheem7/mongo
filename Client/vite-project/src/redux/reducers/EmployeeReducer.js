@@ -3,15 +3,17 @@ import { fetchEmployee } from "../action/FetchEmployee";
 import { addEmployee } from "../action/AddEmployee";
 import { updateEmployee } from "../action/UpdateEmployee";
 import { removeEmployee } from "../action/RemoveEmployee";
+import { toast } from "react-toastify";
+const initialState = {
+  loading: false,
+  updateState: false,
+  employeeList: [],
+  error: "",
+  response: "",
+};
 const employeeSlice = createSlice({
-  name: "Employee",
-  initialState: {
-    loading: false,
-    updateState: false,
-    employeeList: [],
-    error: "",
-    response: "",
-  },
+  name: "employee",
+  initialState,
   reducers: {
     updateStateTrue: (state) => {
       state.updateState = true;
@@ -33,12 +35,21 @@ const employeeSlice = createSlice({
     });
     builder.addCase(addEmployee.fulfilled, (state, action) => {
       state.loading = false;
-      state.employeeList.push(action.payload);
-      state.response = "Added";
+      console.log(action);
+      if (Array.isArray(state.employeeList)) {
+        state.employeeList.push(action.payload);
+      } else {
+        state.employeeList = [action.payload];
+      }
+
+      state.response = action.payload.message;
+      toast.success(action.payload.message);
     });
     builder.addCase(addEmployee.rejected, (state, action) => {
       state.loading = false;
+      console.log(action);
       state.error = action.error.message;
+      toast.error(action.error.message);
     });
     builder.addCase(updateEmployee.fulfilled, (state, action) => {
       const updateItem = action.payload;

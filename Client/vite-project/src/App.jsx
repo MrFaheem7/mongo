@@ -7,8 +7,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Data from "./Components/Data";
 import PrivateRoutes from "./Components/PrivateRoutes";
+import PublicRoutes from "./Components/PublicRoutes";
 const App = () => {
-  console.log("asdasdjasgdjg");
   return (
     <>
       <ToastContainer
@@ -26,8 +26,10 @@ const App = () => {
       />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
+          <Route element={<PublicRoutes />}>
+            <Route path="/" element={<SignUp />} />
+            <Route path="/login" element={<Login />} />
+          </Route>
           <Route element={<PrivateRoutes />}>
             <Route path="/home" element={<Home />} />
             <Route path="/data" element={<Data />} />

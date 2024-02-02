@@ -11,6 +11,6 @@ export const updateEmployee = createAsyncThunk(
         position: data.position,
       }
     );
-    return response;
+    return response.data;
   }
 );

@@ -6,8 +6,8 @@ export const addEmployee = createAsyncThunk(
   async (data) => {
     const response = await axios.post("http://localhost:3000/api/data", {
       name: data.name,
-      position: data.postion,
+      position: data.position,
     });
-    return response;
+    return response.data;
   }
 );

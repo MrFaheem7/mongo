@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UserAction } from "../../action/User";
-
+const initialState = {
+  user: "",
+  loading: false,
+  error: "",
+};
 const userSlice = createSlice({
   name: "user",
-  initialState: {
-    user: "",
-    loading: false,
-    error: "",
-  },
+  initialState,
   reducers: {
     resetUser: () => initialState,
   },

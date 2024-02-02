@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -18,10 +18,44 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { resetUser } from "../redux/reducers/auth/UserReducer";
+import { addEmployee } from "../redux/action/AddEmployee";
+import { fetchEmployee } from "../redux/action/FetchEmployee";
+import useLogout from "../hooks/useLogout";
+import { updateEmployee } from "../redux/action/UpdateEmployee";
 const Home = () => {
+  const { response } = useSelector((state) => state.root.employee);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { logout } = useLogout();
+  const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [position, setPosition] = useState("");
+
+  useEffect(() => {
+    dispatch(fetchEmployee());
+  }, [dispatch]);
+  const handleUpdate = (item) => {
+    dispatch(
+      updateEmployee({
+        id: "65ba2c9e3f8cb3cf8a3c1e5b",
+        name: name,
+        position: position,
+      })
+    );
+    setId("");
+    setName("");
+    setPosition("");
+  };
+  const handleAdd = (e) => {
+    e.preventDefault();
+    dispatch(addEmployee({ name: name, position: position }));
+    setName("");
+    setPosition("");
+  };
   const logOut = () => {
-    localStorage.removeItem("token");
+    logout();
     toast.info("Logout");
     navigate("/login");
   };
@@ -75,14 +109,34 @@ const Home = () => {
               variant="outlined"
               size="small"
               placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
-            <TextField variant="outlined" size="small" placeholder="Position" />
+            <TextField
+              variant="outlined"
+              size="small"
+              placeholder="Position"
+              value={position}
+              onChange={(e) => setPosition(e.target.value)}
+            />
 
-            <Button variant="contained" color="primary" size="small">
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={(e) => handleUpdate(e)}
+            >
               Update
             </Button>
 
-            <Button variant="contained" color="primary" size="small">
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={(e) => {
+                handleAdd(e);
+              }}
+            >
               Add
             </Button>
           </Box>
