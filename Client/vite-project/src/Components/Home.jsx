@@ -19,20 +19,25 @@ import { Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { resetUser } from "../redux/reducers/auth/UserReducer";
 import { addEmployee } from "../redux/action/AddEmployee";
 import { fetchEmployee } from "../redux/action/FetchEmployee";
 import useLogout from "../hooks/useLogout";
 import { updateEmployee } from "../redux/action/UpdateEmployee";
+import CustomModal from "./common/CustomModal";
 const Home = () => {
-  const { response } = useSelector((state) => state.root.employee);
+  const { employeeList } = useSelector((state) => state.root.employee);
+  const data = employeeList.response;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { logout } = useLogout();
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [position, setPosition] = useState("");
+  //
+  const [show, setShow] = useState(false);
 
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   useEffect(() => {
     dispatch(fetchEmployee());
   }, [dispatch]);
@@ -56,7 +61,7 @@ const Home = () => {
   };
   const logOut = () => {
     logout();
-    toast.info("Logout");
+    toast.warn("Logout");
     navigate("/login");
   };
   return (
@@ -171,36 +176,46 @@ const Home = () => {
                 <TableCell> Loading... </TableCell>
                 <TableCell> Loading... </TableCell>
                 <TableCell> No Records </TableCell>
-                <TableRow
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  <TableCell align="left">
-                    <Typography> vvc </Typography>
-                  </TableCell>
-                  <TableCell align="left">
-                    <Typography> jon doe </Typography>
-                  </TableCell>
-                  <TableCell align="left">
-                    <Typography> HR </Typography>
-                  </TableCell>
-                  <TableCell align="left">
-                    <Box sx={{ display: "flex", cursor: "pointer" }}>
-                      <Box sx={{ color: "black", mr: 1 }}>
-                        <EditIcon />
-                      </Box>
-                      <Box sx={{ color: "red" }}>
-                        <DeleteIcon />
-                      </Box>
-                    </Box>
-                  </TableCell>
-                </TableRow>
+                {data &&
+                  data.map((item, index) => {
+                    return (
+                      <TableRow
+                        key={index}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
+                      >
+                        <TableCell align="left">
+                          <Typography> {item.name} </Typography>
+                        </TableCell>
+                        <TableCell align="left">
+                          <Typography> {item.position} </Typography>
+                        </TableCell>
+                        <TableCell align="left">
+                          <Typography> HR </Typography>
+                        </TableCell>
+                        <TableCell align="left">
+                          <Box sx={{ display: "flex", cursor: "pointer" }}>
+                            <Box
+                              sx={{ color: "black", mr: 1, cursor: "pointer" }}
+                              onClick={handleShow}
+                            >
+                              <EditIcon />
+                            </Box>
+                            <Box sx={{ color: "red" }}>
+                              <DeleteIcon />
+                            </Box>
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
               </TableBody>
             </Table>
           </TableContainer>
         </Box>
       </div>
+      <CustomModal show={show} onHide={handleClose}></CustomModal>
     </div>
   );
 };
