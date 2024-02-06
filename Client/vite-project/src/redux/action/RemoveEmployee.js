@@ -7,6 +7,7 @@ export const removeEmployee = createAsyncThunk(
     const response = await axios.delete(
       `http://localhost:3000/api/data/${data}`
     );
+    console.log(response.data);
     return response.data;
   }
 );

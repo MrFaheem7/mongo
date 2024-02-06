@@ -57,8 +57,9 @@ app.get("/getAllSalesData", verifyToken, async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-app.post("/delete", verifyToken, async (req, res) => {
-  await User.deleteMany({});
+app.post("/delete", async (req, res) => {
+  await EmployeeData.deleteMany({});
+  res.json("deleted successfully");
 });
 app.post("/", async (req, res) => {
   console.log(req, "reqqq");

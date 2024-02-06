@@ -23,24 +23,39 @@ import { addEmployee } from "../redux/action/AddEmployee";
 import { fetchEmployee } from "../redux/action/FetchEmployee";
 import useLogout from "../hooks/useLogout";
 import { updateEmployee } from "../redux/action/UpdateEmployee";
-import CustomModal from "./common/CustomModal";
+import { CustomModal as Modal } from "./common/CustomModal";
+import UpdateFrom from "./forms/UpdateFrom";
+import DeleteForm from "./forms/DeleteForm";
 const Home = () => {
-  const { employeeList } = useSelector((state) => state.root.employee);
-  const data = employeeList.response;
+  const { employeeList, loading, error } = useSelector(
+    (state) => state.root.employee
+  );
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { logout } = useLogout();
-  const [id, setId] = useState("");
+  const [item, setItem] = useState("");
   const [name, setName] = useState("");
   const [position, setPosition] = useState("");
+  const [check, setCheck] = useState();
+
   //
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleUpdateShow = (item) => {
+    setShow(true);
+    setItem(item);
+    setCheck("update");
+  };
+  const handleDeleteShow = (item) => {
+    setItem(item);
+    setShow(true);
+    setCheck("delete");
+  };
   useEffect(() => {
     dispatch(fetchEmployee());
-  }, [dispatch]);
+  }, []);
   const handleUpdate = (item) => {
     dispatch(
       updateEmployee({
@@ -125,14 +140,14 @@ const Home = () => {
               onChange={(e) => setPosition(e.target.value)}
             />
 
-            <Button
+            {/* <Button
               variant="contained"
               color="primary"
               size="small"
               onClick={(e) => handleUpdate(e)}
             >
               Update
-            </Button>
+            </Button> */}
 
             <Button
               variant="contained"
@@ -172,12 +187,14 @@ const Home = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableCell> Loading... </TableCell>
-                <TableCell> Loading... </TableCell>
-                <TableCell> Loading... </TableCell>
-                <TableCell> No Records </TableCell>
-                {data &&
-                  data.map((item, index) => {
+                {loading ? <TableCell> Loading... </TableCell> : null}
+                {!loading && employeeList.length == 0 ? (
+                  <TableCell> No Records </TableCell>
+                ) : null}
+                {error ? <TableCell> {error} </TableCell> : null}
+
+                {!!employeeList.length &&
+                  employeeList?.map((item, index) => {
                     return (
                       <TableRow
                         key={index}
@@ -186,23 +203,26 @@ const Home = () => {
                         }}
                       >
                         <TableCell align="left">
+                          <Typography> {index + 1} </Typography>
+                        </TableCell>
+                        <TableCell align="left">
                           <Typography> {item.name} </Typography>
                         </TableCell>
                         <TableCell align="left">
-                          <Typography> {item.position} </Typography>
-                        </TableCell>
-                        <TableCell align="left">
-                          <Typography> HR </Typography>
+                          <Typography> {item.position}</Typography>
                         </TableCell>
                         <TableCell align="left">
                           <Box sx={{ display: "flex", cursor: "pointer" }}>
                             <Box
                               sx={{ color: "black", mr: 1, cursor: "pointer" }}
-                              onClick={handleShow}
+                              onClick={() => handleUpdateShow(item)}
                             >
                               <EditIcon />
                             </Box>
-                            <Box sx={{ color: "red" }}>
+                            <Box
+                              sx={{ color: "red", cursor: "pointer" }}
+                              onClick={() => handleDeleteShow(item)}
+                            >
                               <DeleteIcon />
                             </Box>
                           </Box>
@@ -215,7 +235,18 @@ const Home = () => {
           </TableContainer>
         </Box>
       </div>
-      <CustomModal show={show} onHide={handleClose}></CustomModal>
+      <Modal
+        title={check == "update" ? "Update Employee " : "Delete Employee"}
+        size={check == "update" ? "sm" : "md"}
+        show={show}
+        onHide={handleClose}
+      >
+        {check == "update" ? (
+          <UpdateFrom item={item} handleClose={handleClose} />
+        ) : (
+          <DeleteForm item={item} handleClose={handleClose} />
+        )}
+      </Modal>
     </div>
   );
 };

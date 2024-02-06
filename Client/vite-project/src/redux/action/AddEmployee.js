@@ -8,6 +8,7 @@ export const addEmployee = createAsyncThunk(
       name: data.name,
       position: data.position,
     });
-    return response.data;
+    console.log(response.data.response, "add employee");
+    return response?.data;
   }
 );

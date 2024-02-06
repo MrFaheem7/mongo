@@ -1,22 +1,15 @@
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 
-function CustomModal({ children, onHide, show }) {
+export const CustomModal = ({ children, onHide, show, title, size }) => {
   return (
     <>
-      <Modal centered show={show} onHide={onHide} animation={false}>
+      <Modal size={size} centered show={show} onHide={onHide} animation={true}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>{children}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary">Close</Button>
-          <Button variant="primary">Update</Button>
-        </Modal.Footer>
       </Modal>
     </>
   );
-}
-
-export default CustomModal;
+};
