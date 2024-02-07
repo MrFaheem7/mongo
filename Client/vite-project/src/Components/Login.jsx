@@ -7,13 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { UserAction } from "../redux/action/User";
 
 const Login = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(UserAction({ email, password, navigate }));
+    dispatch(UserAction({ email, password }));
   };
   return (
     <div

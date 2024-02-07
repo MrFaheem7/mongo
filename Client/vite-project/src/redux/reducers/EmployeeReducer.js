@@ -27,7 +27,6 @@ const employeeSlice = createSlice({
     });
     builder.addCase(fetchEmployee.rejected, (state, action) => {
       state.error = action.error.message;
-      console.log(action.error.message, "fetchcase");
       state.loading = false;
     });
     builder.addCase(addEmployee.pending, (state) => {
@@ -36,7 +35,6 @@ const employeeSlice = createSlice({
     builder.addCase(addEmployee.fulfilled, (state, action) => {
       state.loading = false;
       state.error = null;
-      console.log(action, "actionn");
       if (Array.isArray(state.employeeList)) {
         state.employeeList.unshift(action.payload.response);
       } else {
@@ -48,14 +46,15 @@ const employeeSlice = createSlice({
     });
     builder.addCase(addEmployee.rejected, (state, action) => {
       state.loading = false;
-      console.log(action);
       state.error = action.error.message;
-      console.log(action.error.message, "addcase");
       toast.error(action.error.message);
     });
+    builder.addCase(updateEmployee.pending, (state, action) => {
+      state.loading = true;
+    });
     builder.addCase(updateEmployee.fulfilled, (state, action) => {
-      const updateItem = action.payload;
-      console.log(updateItem);
+      const updateItem = action.payload.updateEmployee;
+
       const index = state.employeeList.findIndex(
         (item) => item._id === updateItem._id
       );
@@ -63,15 +62,17 @@ const employeeSlice = createSlice({
         state.employeeList[index] = updateItem;
       }
       state.response = "update";
+      state.loading = false;
+      toast.success(action.payload.message);
+    });
+    builder.addCase(removeEmployee.pending, (state, action) => {
+      state.loading = true;
     });
     builder.addCase(removeEmployee.fulfilled, (state, action) => {
-      console.log(action.payload, "payload");
       state.employeeList = state.employeeList.filter((item) => {
-        console.log(item, "item");
         return item._id !== action.payload.deleteEmployee._id;
       });
       toast.success(action.payload.message);
-      console.log(state.employeeList, "filtered array");
       state.response = "deleted";
       state.loading = false;
     });

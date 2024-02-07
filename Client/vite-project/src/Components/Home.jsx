@@ -11,6 +11,7 @@ import {
   Alert,
   Box,
   Button,
+  LinearProgress,
   Snackbar,
   TextField,
   Typography,
@@ -56,18 +57,7 @@ const Home = () => {
   useEffect(() => {
     dispatch(fetchEmployee());
   }, []);
-  const handleUpdate = (item) => {
-    dispatch(
-      updateEmployee({
-        id: "65ba2c9e3f8cb3cf8a3c1e5b",
-        name: name,
-        position: position,
-      })
-    );
-    setId("");
-    setName("");
-    setPosition("");
-  };
+
   const handleAdd = (e) => {
     e.preventDefault();
     dispatch(addEmployee({ name: name, position: position }));
@@ -81,6 +71,7 @@ const Home = () => {
   };
   return (
     <div>
+      {loading ? <LinearProgress color="success" /> : null}
       <div
         style={{
           display: "flex",
@@ -116,50 +107,48 @@ const Home = () => {
             alignItems: "center",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              gap: "8px",
+          <form
+            onSubmit={(e) => {
+              handleAdd(e);
+              e.preventDefault();
             }}
           >
-            <TextField
-              sx={{ color: "white" }}
-              variant="outlined"
-              size="small"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <TextField
-              variant="outlined"
-              size="small"
-              placeholder="Position"
-              value={position}
-              onChange={(e) => setPosition(e.target.value)}
-            />
-
-            {/* <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={(e) => handleUpdate(e)}
-            >
-              Update
-            </Button> */}
-
-            <Button
-              variant="contained"
-              color="primary"
-              size="small"
-              onClick={(e) => {
-                handleAdd(e);
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                gap: "8px",
               }}
             >
-              Add
-            </Button>
-          </Box>
+              <TextField
+                sx={{ color: "white" }}
+                variant="outlined"
+                size="small"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+              <TextField
+                variant="outlined"
+                size="small"
+                placeholder="Position"
+                value={position}
+                required
+                onChange={(e) => setPosition(e.target.value)}
+              />
+
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                type="submit"
+              >
+                Add
+              </Button>
+            </Box>
+          </form>
           <TableContainer component={Paper} sx={{ marginTop: "16px" }}>
             <Table sx={{ minWidth: 659 }} aria-label="simple table">
               <TableHead>
@@ -187,7 +176,6 @@ const Home = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {loading ? <TableCell> Loading... </TableCell> : null}
                 {!loading && employeeList.length == 0 ? (
                   <TableCell> No Records </TableCell>
                 ) : null}

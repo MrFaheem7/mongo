@@ -8,12 +8,15 @@ import "react-toastify/dist/ReactToastify.css";
 import Data from "./Components/Data";
 import PrivateRoutes from "./Components/PrivateRoutes";
 import PublicRoutes from "./Components/PublicRoutes";
+import { useSelector } from "react-redux";
+import { LinearProgress } from "@mui/material";
 const App = () => {
+  const { loading } = useSelector((state) => state.root.user);
   return (
     <>
       <ToastContainer
         position="top-center"
-        autoClose={5000}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -24,6 +27,7 @@ const App = () => {
         theme="light"
         // transition: Bounce,
       />
+      {loading && <LinearProgress color="success" />}
       <BrowserRouter>
         <Routes>
           <Route element={<PublicRoutes />}>

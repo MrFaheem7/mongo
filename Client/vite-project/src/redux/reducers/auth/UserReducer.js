@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { UserAction } from "../../action/User";
 const initialState = {
   user: "",
+  token: "",
   loading: false,
   error: "",
 };
@@ -13,9 +14,13 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(UserAction.fulfilled, (state, action) => {
-      console.log(action);
-      state.user = action.payload;
+      if (action.payload.message == "Login Successfully") {
+        state.user = action.payload;
+      } else {
+        state.user = "";
+      }
       state.loading = false;
+      state.token = action.payload.token;
     });
     builder.addCase(UserAction.pending, (state, action) => {
       state.loading = true;

@@ -1,22 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 const Data = () => {
-  const authToken =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWIzYjJiNjVkYjA2ZDM0MzUwM2M1YjIiLCJpYXQiOjE3MDY2MjEzODEsImV4cCI6MTcwNjYyMTk4MX0.zuNqKPDvS51LPyN2FJMxVu6z5fdiTI55isnJ4Un2em8";
-
+  const { token, loading } = useSelector((state) => state.root.user);
   const [data, setData] = useState([]);
 
   useEffect(() => {
     axios
       .get("http://localhost:3000/getAllSalesData", {
         headers: {
-          Authorization: ` ${authToken}`,
+          Authorization: ` ${token}`,
           "Content-Type": "application/json", // You may need to adjust the content type based on your API
         },
       })
       .then((res) => {
         const arr = res.data.allSalesData;
-        console.log(arr, "arrr");
         const firstTenElements = arr.slice(0, 10);
         console.log(firstTenElements, "10 elements");
         setData(firstTenElements);
@@ -26,10 +24,11 @@ const Data = () => {
   }, []);
   return (
     <>
-      {data.map((item) => {
+      {loading && <LinearProgress color="success" />}
+      {data?.map((item, index) => {
         return (
           <>
-            <p>{item.saleDate}</p>
+            <p key={index}>{item.saleDate}</p>
           </>
         );
       })}

@@ -1,16 +1,30 @@
 import { Box, Button, TextField } from "@mui/material";
 import React from "react";
 import { useFormik } from "formik";
+import { updateEmployee } from "../../redux/action/UpdateEmployee";
+import { useDispatch } from "react-redux";
 const UpdateFrom = ({ handleClose, item }) => {
-  console.log(item, "itemmmm");
+  const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
-      id: item._id,
-      name: item.name || "",
-      position: item.position || "",
+      id: item?._id || "",
+      name: item?.name || "",
+      position: item?.position || "",
+    },
+    onSubmit: (values) => {
+      if (values) {
+        dispatch(
+          updateEmployee({
+            id: values?.id,
+            name: values?.name,
+            position: values?.position,
+          })
+        );
+      }
     },
   });
   const handleSubmit = (e) => {
+    formik.handleSubmit();
     handleClose();
     e.preventDefault();
   };
@@ -30,18 +44,20 @@ const UpdateFrom = ({ handleClose, item }) => {
             sx={{ color: "white" }}
             variant="outlined"
             size="small"
+            name="name"
             placeholder="Name"
             value={formik.values.name}
-            // onChange={(e) => setName(e.target.value)}
+            onChange={() => formik.handleChange("name")}
           />
         </Box>
         <Box>
           <TextField
             variant="outlined"
             size="small"
+            name="position"
             placeholder="Position"
             value={formik.values.position}
-            // onChange={(e) => setPosition(e.target.value)}
+            onChange={formik.handleChange("position")}
           />
         </Box>
         <Box>
